@@ -1,4 +1,13 @@
 window.addEventListener('load', function () {
+
+	Array.prototype.each = function(fn) {
+		var result = [];
+		for (var i = 0; i < this.length; i ++) {
+			result[i] = fn(this[i], i);
+		}
+		return result;
+	};
+
 	var ctx;
 	var blocks = [
 					[
@@ -40,7 +49,12 @@ window.addEventListener('load', function () {
 
 	var block = blocks[Math.floor(Math.random() * blocks.length)];
 	var posx = 4, posy = 0;
-	var map, mapWidth = 10, mapHeight = 20;
+	// var map, mapWidth = 10, mapHeight = 20;
+	var mapWidth = 10, mapHeight = 20;
+
+	var map = new Array(mapHeight).each(function() {
+					return new Array(mapWidth).each(function() { return 0; });
+			});
 
 	var elmTarget = document.getElementById('target');
 	var ctx = elmTarget.getContext('2d');
