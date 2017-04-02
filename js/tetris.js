@@ -1,9 +1,45 @@
 window.addEventListener('load', function () {
 	var ctx;
-	var block = [[1,1],
-				 [0,1],
-				 [0,1]];
-	var posx = 0, posy = 0;
+	var blocks = [
+					[
+						[1,1],
+						[0,1],
+						[0,1]
+					],
+					[
+						[1,1],
+						[1,0],
+						[1,0]
+					],
+					[
+						[1,1],
+						[1,1]
+					],
+					[
+						[1,0],
+						[1,1],
+						[1,0]
+					],
+					[
+						[1,0],
+						[1,1],
+						[0,1]
+					],
+					[
+						[0,1],
+						[1,1],
+						[1,0]
+					],
+					[
+						[1],
+						[1],
+						[1],
+						[1]
+					]
+					];
+
+	var block = blocks[Math.floor(Math.random() * blocks.length)];
+	var posx = 4, posy = 0;
 	var map, mapWidth = 10, mapHeight = 20;
 
 	var elmTarget = document.getElementById('target');
@@ -43,7 +79,8 @@ window.addEventListener('load', function () {
 		else {
 			mergeMatrix(map, block, posx, posy);
 			clearRows(map);
-			posx = 0; posy = 0;
+			posx = 4; posy = 0;
+			block = blocks[Math.floor(Math.random() * blocks.length)];
 		}
 	}
 
@@ -124,8 +161,6 @@ window.addEventListener('load', function () {
 				rotated[x][block.length - y - 1] = block[y][x];
 			}
 		}
-		console.log(block);
-		console.log(rotated);
 		return rotated;
 	}
 	function clearRows(map) {
