@@ -1,5 +1,4 @@
 window.addEventListener('load', function () {
-	// alert("Hello, world!");
 	var ctx;
 	var block = [[1,1],
 				 [0,1],
