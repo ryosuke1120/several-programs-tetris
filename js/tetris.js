@@ -30,10 +30,6 @@ window.addEventListener('load', function () {
 
 	document.onkeydown = function (e){
 		key(e.keyCode);
-		// if(!e) e = window.event; // レガシー
-
-		// // 出力テスト
-		// console.log(e);
 	};
 
 
