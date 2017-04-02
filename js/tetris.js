@@ -81,7 +81,6 @@ window.addEventListener('load', function () {
 		key(e.keyCode);
 	};
 
-
 	function paint(){
 		ctx.clearRect(0, 0, 200, 400);
 		paintMatrix(map, 0, 0, 'rgb(128, 128, 128)');
@@ -100,13 +99,13 @@ window.addEventListener('load', function () {
 
 	function paintMatrix(matrix, offsetx, offsety, color) {
 		ctx.fillStyle = color;
-		for (var y = 0; y < matrix.length; y ++) {
-			for (var x = 0; x < matrix[y].length; x ++) {
-				if (matrix[y][x]) {
+		matrix.each(function(row, y) {
+			row.each(function(val, x) {
+				if (val) {
 					ctx.fillRect((x + offsetx) * 20, (y + offsety) * 20, 20, 20);
 				}
-			}
-		}
+			});
+		});
     }
 
 	function check(map, block, offsetx, offsety) {
@@ -115,24 +114,26 @@ window.addEventListener('load', function () {
 			mapWidth  < offsetx + block[0].length) {
 				return false;
 		}
-		for (var y = 0; y < block.length; y ++) {
-			for (var x = 0; x < block[y].length; x ++) {
-				if (block[y][x] && map[y + offsety][x + offsetx]) { 
-					return false;
+
+		var checkflag = true;
+		block.each(function(row, y) {
+			row.each(function(val, x) {
+				if (val && map[y + offsety][x + offsetx]) {
+					checkflag = false;
 				}
-			}
-		}
-		return true;
+			});
+		});
+		return checkflag;
 	}
 
 	function mergeMatrix(map, block, offsetx, offsety) {
-		for (var y = 0; y < mapHeight; y ++) {
-			for (var x = 0; x < mapWidth; x ++) {
+		map.each(function(row, y) {
+			row.each(function(val, x) {
 				if (block[y - offsety] && block[y - offsety][x - offsetx]) {
-					map[y][x]++;
+					row[x]++;
 				}
-			}
-		}
+			});
+		});
 	}
 
 	function key(keyCode) {
@@ -160,39 +161,35 @@ window.addEventListener('load', function () {
 				while (check(map, block, posx, y)) { y++; }
 				posy = y - 1;
 				break;
-				default:
+			default:
 				return;
 		}
 		ctx.clearRect(0, 0, 200, 400);
 		paintMatrix(block, posx, posy, 'rgb(255, 0, 0)');
 		paintMatrix(map, 0, 0, 'rgb(128, 128, 128)');
 	}
+
 	function rotate(block) {
-		var rotated = [];
-		for (var x = 0; x < block[0].length; x ++) {
-			rotated[x] = [];
-			for (var y = 0; y < block.length; y ++) {
-				rotated[x][block.length - y - 1] = block[y][x];
-			}
-		}
-		return rotated;
+		return new Array(block[0].length).each(function(_, y) {
+			return new Array(block.length).each(function(_, x) {
+				return block[block.length - x - 1][y];
+			});
+		});
+
 	}
+
 	function clearRows(map) {
-		for (var y = 0; y < mapHeight; y ++) {
+		map.each(function(row, y) {
 			var full = true;
-			for (var x = 0; x < mapWidth; x ++) {
-				if (!map[y][x]) {
-					full = false;
-				}
+			row.each(function(val, x) {
+			if (!val) {
+				full = false;
 			}
+			});
 			if (full) {
 				map.splice(y, 1);
-				var newRow = [];
-				for (var i = 0; i < mapWidth; i ++) {
-					newRow[i] = 0;
-				}
-				map.unshift(newRow);
+				map.unshift(new Array(mapWidth).each(function() { return 0 }));
 			}
-		}
+		});
 	}
 }, false);
